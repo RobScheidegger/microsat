@@ -22,6 +22,6 @@ Although `microsat` isn't intended to be used as a fast SAT-solver, I felt it ap
 || `microsat`  | `minisat`  |
 |---|---|---|
 |Time to solve example suite| 44.158s  |  41.432s |
-|Lines of code| 806  | 3517 |
+|Lines of code| 791  | 3517 |
 
 As you can see, `microsat` does pretty remarkably well in this benchmark, despite being _much_ smaller than the already small `minisat`. Further, it is important to note that for any reasonably large instance (eg. larger than the `1040` variable, `3668` clause file in `examples/cnf`, which is the largest in this benchmark), so in a way, this benchmark is clearly cheating (but fascinating regardless).

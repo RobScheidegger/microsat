@@ -154,7 +154,7 @@ impl Expression {
         let actions = self.actions.clone();
         let mut actions = actions.write().unwrap();
 
-        actions.push(Action::RemoveLiteralFromClausesStart(literal));
+        actions.push(Action::RemoveLiteralFromClausesStart());
 
         let literal_clauses = clauses_result.unwrap();
         for clause_id in literal_clauses {
@@ -191,27 +191,6 @@ impl Expression {
         for clause_id in literal_clauses {
             self.remove_clause(clause_id);
         }
-    }
-
-    fn is_pure_literal(&self, literal: Literal) -> bool {
-        let negated_literal = negate(literal);
-
-        let literal_res = self.literal_to_clause.get(&literal);
-        let negated_literal_res = self.literal_to_clause.get(&negated_literal);
-
-        if literal_res.is_some() && negated_literal_res.is_none() {
-            return true;
-        }
-
-        if !literal_res.unwrap().is_empty() && negated_literal_res.is_none() {
-            return true;
-        }
-
-        if !literal_res.unwrap().is_empty() && negated_literal_res.unwrap().is_empty() {
-            return true;
-        }
-
-        false
     }
 
     fn check_pure_literal(&mut self, literal: Literal) {
@@ -500,8 +479,6 @@ impl CNF for Expression {
     }
 
     fn get_branch_variable(&self) -> (Variable, bool) {
-        // For now, pick the variable with the largest number of instances
-
         match self.heuristic {
             SolverHeuristic::MostLiteralOccurances => self.get_most_literal_occurances(),
             SolverHeuristic::MostVariableOccurances => self.get_most_variable_occurances(),
@@ -548,7 +525,7 @@ impl CNF for Expression {
 
                                 removing_literal_clauses.insert(clause_id);
                             }
-                            Action::RemoveLiteralFromClausesStart(start_literal) => {
+                            Action::RemoveLiteralFromClausesStart() => {
                                 should_exit = true;
                             }
                             _ => panic!("Did not encounter a start literal!"),
@@ -563,7 +540,8 @@ impl CNF for Expression {
         }
     }
 
-    /// Inference is generally possible when the
+    /// Inference is possibly when there are some "Active" clauses, 
+    /// and either pure literals or unit clauses.
     fn is_inference_possible(&self) -> bool {
         self.num_empty_clauses == 0
             && self.num_active_clauses > 0

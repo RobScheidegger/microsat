@@ -3,7 +3,7 @@ use hashbrown::HashMap;
 #[derive(Debug, Eq, PartialEq, Clone, Copy)]
 pub enum Action {
     RemoveClause(ClauseId),
-    RemoveLiteralFromClausesStart(Literal),
+    RemoveLiteralFromClausesStart(),
     RemoveLiteralFromClause(ClauseId),
     RemoveLiteralFromClausesEnd(Literal),
     AssignVariable(Variable),

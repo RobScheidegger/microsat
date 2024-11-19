@@ -4,6 +4,7 @@ use crate::{
 };
 
 pub fn solve_dpll(cnf: &mut Expression) -> Option<Assignment> {
+    // Track where we are in the action stack
     let action_state: ActionState = cnf.get_action_state();
 
     // Try to do as much inference as we can before branching
@@ -11,7 +12,9 @@ pub fn solve_dpll(cnf: &mut Expression) -> Option<Assignment> {
         // Next, remove all of the unit clauses
         while cnf.remove_unit_clause().is_some() {}
 
+        // If the CNF is satisfied, then we are done
         if cnf.is_unsatisfiable() {
+            // Restore the action state (undo branching)
             cnf.restore_action_state(action_state);
             return None;
         }
@@ -28,9 +31,11 @@ pub fn solve_dpll(cnf: &mut Expression) -> Option<Assignment> {
         return None;
     }
 
+    // Pick some variable to branch on ("guess") to keep searching
     let branch_action_state = cnf.get_action_state();
     let (branch_variable, branch_value) = cnf.get_branch_variable();
 
+    // Try the first branch value
     cnf.branch_variable(branch_variable, branch_value);
 
     let branch_result = solve_dpll(cnf);
