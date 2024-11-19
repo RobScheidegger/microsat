@@ -1,0 +1,20 @@
+[package]
+name = "microsat"
+description = "A simple DPLL SAT solver"
+version = "0.0.1"
+edition = "2021"
+authors = ["Rob Scheidegger <fritz@adktech.com>", "Hammad Izhar <hammad_izhar@brown.edu>"]
+include = [
+    "src/**/*.rs",
+    "Cargo.toml"
+]
+license = "GPL-3.0"
+repository = "https://github.com/RobScheidegger/microsat"
+readme = "README.md"
+keywords = ["sat", "dpll", "solver"]
+
+[badges]
+github = { repository = "RobScheidegger/microsat", branch = "mainline"}
+
+[dependencies]
+hashbrown = "0.15.1"
